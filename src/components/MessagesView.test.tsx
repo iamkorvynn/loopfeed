@@ -76,3 +76,20 @@ describe('MessagesView', () => {
     expect(onSelect).toHaveBeenCalledWith('t_theo')
   })
 })
+
+describe('MessagesView new chat list', () => {
+  it('lists everyone as a new-chat option', () => {
+    const s = buildSeedState(Date.now())
+    render(
+      <MessagesView
+        state={s}
+        activeThreadId={undefined}
+        onSelectThread={() => {}}
+        onOpenProfile={() => {}}
+        onStarted={() => {}}
+      />,
+    )
+    expect(screen.getByText('Start a new chat')).toBeInTheDocument()
+    expect(screen.getByText('💬 noor.lines')).toBeInTheDocument()
+  })
+})

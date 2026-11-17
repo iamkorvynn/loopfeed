@@ -33,7 +33,8 @@ describe('MessagesView', () => {
   it('shows the active thread messages', () => {
     renderMessages('t_mara')
     expect(screen.getByText(/kiln opens at 6/)).toBeInTheDocument()
-    expect(screen.getByText(/it fires brown/)).toBeInTheDocument()
+    // The last message shows in the thread preview AND in the chat log.
+    expect(screen.getAllByText(/it fires brown/).length).toBe(2)
   })
 
   it('sending a message appends it to the thread', () => {

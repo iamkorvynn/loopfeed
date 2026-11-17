@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { buildSeedState } from '../data/seed'
-import { resetState } from '../store/store'
+import { getState, resetState } from '../store/store'
 import { FeedView } from './FeedView'
 
 beforeEach(() => {
@@ -56,5 +56,23 @@ describe('FeedView', () => {
     expect(screen.getByText('Your feed is empty')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Explore posts'))
     expect(onExplore).toHaveBeenCalled()
+  })
+})
+
+describe('FeedView suggestions', () => {
+  it('following from the rail updates the store', () => {
+    const s = buildSeedState(Date.now())
+    render(
+      <FeedView
+        state={s}
+        onOpenProfile={() => {}}
+        onOpenStory={() => {}}
+        onGoExplore={() => {}}
+      />,
+    )
+    // Noor is a suggested user; her Follow button lives in the rail.
+    const buttons = screen.getAllByText('Follow')
+    fireEvent.click(buttons[0])
+    expect(getState().users.find((u) => u.id === 'u_me')!.following).toContain('u_noor')
   })
 })

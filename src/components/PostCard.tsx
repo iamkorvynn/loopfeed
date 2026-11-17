@@ -28,6 +28,18 @@ export function PostCard({ post, state, onOpenProfile }: PostCardProps) {
 
   const liked = post.likeIds.includes(me)
   const saved = post.saveIds.includes(me)
+  const [copied, setCopied] = useState(false)
+
+  const copyLink = async () => {
+    const url = `${window.location.origin}/post/${post.id}`
+    try {
+      await navigator.clipboard.writeText(url)
+    } catch {
+      // Clipboard unavailable (old browser / permissions): still show feedback.
+    }
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 1500)
+  }
 
   const doubleTap = () => {
     const now = Date.now()
@@ -78,6 +90,15 @@ export function PostCard({ post, state, onOpenProfile }: PostCardProps) {
 
       <div className="post-actions">
         <LikeButton postId={post.id} liked={liked} count={post.likeIds.length} />
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label={copied ? 'Link copied' : 'Copy link to this post'}
+          onClick={copyLink}
+        >
+          <span aria-hidden="true">{copied ? '✅' : '🔗'}</span>
+          {copied && <span className="icon-btn-count">Copied</span>}
+        </button>
         <span className="post-action-spacer" />
         <SaveButton postId={post.id} saved={saved} />
       </div>

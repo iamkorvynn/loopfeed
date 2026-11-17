@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { getTheme, setTheme, type Theme } from '../utils/theme'
+
 export type View = 'feed' | 'explore' | 'create' | 'messages' | 'notifications' | 'profile' | 'search'
 
 interface NavBarProps {
@@ -18,8 +21,14 @@ const ITEMS: { view: View; label: string; icon: string }[] = [
   { view: 'profile', label: 'Profile', icon: '👤' },
 ]
 
-/** Top navigation bar with unread badges and a demo reset. */
+/** Top navigation bar with unread badges, dark-mode toggle and demo reset. */
 export function NavBar({ view, onNavigate, unreadDms, unreadNotifs, onResetDemo }: NavBarProps) {
+  const [theme, setThemeState] = useState<Theme>(() => getTheme())
+  const toggleTheme = () => {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(next)
+    setThemeState(next)
+  }
   return (
     <header className="navbar">
       <button type="button" className="brand" onClick={() => onNavigate('feed')} aria-label="LoopFeed home">
@@ -45,6 +54,15 @@ export function NavBar({ view, onNavigate, unreadDms, unreadNotifs, onResetDemo 
           </button>
         ))}
       </nav>
+      <button
+        type="button"
+        className="reset-btn"
+        onClick={toggleTheme}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        title="Toggle dark mode"
+      >
+        {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+      </button>
       <button
         type="button"
         className="reset-btn"

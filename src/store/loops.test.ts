@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { getState, resetState, createPost, editProfile } from './store'
 import { feedPosts, explorePosts, liveStories, savedPosts, searchAll, suggestedUsers } from './selectors'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()

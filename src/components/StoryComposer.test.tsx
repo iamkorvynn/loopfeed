@@ -47,3 +47,13 @@ describe('StoryComposer', () => {
     expect(getState().stories.length).toBe(before)
   })
 })
+
+describe('StoryComposer art style', () => {
+  it('posts with the chosen art style', () => {
+    render(<StoryComposer onPosted={() => {}} onCancel={() => {}} />)
+    fireEvent.change(screen.getByPlaceholderText("What's happening?"), { target: { value: 'style test' } })
+    fireEvent.change(screen.getByLabelText('Artwork style'), { target: { value: 'ocean' } })
+    fireEvent.click(screen.getByText('Post story'))
+    expect(getState().stories[0].artStyle).toBe('ocean')
+  })
+})

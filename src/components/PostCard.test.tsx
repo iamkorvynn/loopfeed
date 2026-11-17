@@ -60,3 +60,13 @@ describe('PostCard', () => {
     expect(screen.getByLabelText('Unlike this post')).toBeInTheDocument()
   })
 })
+
+describe('PostCard plain posts', () => {
+  it('shows no Loop ring for a post without a loop', () => {
+    const s = buildSeedState(Date.now())
+    const post = s.posts.find((p) => p.id === 'p_june_stairs')!
+    render(<PostCard post={post} state={s} onOpenProfile={() => {}} />)
+    expect(document.querySelector('.loop-ring')).toBeNull()
+    expect(screen.queryByText(/Loop ·/)).not.toBeInTheDocument()
+  })
+})

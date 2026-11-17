@@ -27,3 +27,12 @@ describe('StoryTray', () => {
     expect(screen.getByLabelText(/theo.frames's story, includes a poll/)).toBeInTheDocument()
   })
 })
+
+describe('StoryTray empty', () => {
+  it('renders nothing when every story is expired', () => {
+    const s = buildSeedState(Date.now())
+    s.stories = s.stories.map((st) => ({ ...st, createdAt: Date.now() - 25 * 3_600_000 }))
+    const { container } = render(<StoryTray state={s} onOpenStory={() => {}} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+})

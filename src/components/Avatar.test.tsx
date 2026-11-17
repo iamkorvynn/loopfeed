@@ -22,3 +22,16 @@ describe('Avatar', () => {
     expect(screen.getByLabelText('theo.frames avatar')).toBeInTheDocument()
   })
 })
+
+describe('Avatar ring', () => {
+  it('wraps the avatar in a gradient ring when ring is set', () => {
+    const { container } = render(<Avatar username="mara.makes" artStyle="sunset" artSeed={21} ring />)
+    expect(container.querySelector('.avatar-ring')).not.toBeNull()
+  })
+
+  it('has no ring by default', () => {
+    const { container } = render(<Avatar username="mara.makes" artStyle="sunset" artSeed={21} />)
+    expect(container.querySelector('.avatar-ring')).toBeNull()
+    expect(container.querySelector('.avatar')).not.toBeNull()
+  })
+})

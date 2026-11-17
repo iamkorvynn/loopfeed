@@ -5,6 +5,7 @@ import { uploadedImages } from '../store/store'
 import { Avatar } from './Avatar'
 import { ArtImage } from './ArtImage'
 import { FollowButton } from './FollowButton'
+import { FollowList } from './FollowList'
 import { EditProfile } from './EditProfile'
 import { EmptyState } from './EmptyState'
 
@@ -13,11 +14,13 @@ interface ProfileViewProps {
   state: AppState
   onOpenPost: (postId: string) => void
   onMessage: (userId: string) => void
+  onOpenProfile: (userId: string) => void
 }
 
-export function ProfileView({ userId, state, onOpenPost, onMessage }: ProfileViewProps) {
+export function ProfileView({ userId, state, onOpenPost, onMessage, onOpenProfile }: ProfileViewProps) {
   const [tab, setTab] = useState<'posts' | 'saved'>('posts')
   const [editing, setEditing] = useState(false)
+  const [list, setList] = useState<'followers' | 'following' | null>(null)
   const user = state.users.find((u) => u.id === userId)
   const me = state.users.find((u) => u.id === state.currentUserId)
   if (!user || !me) return null
@@ -57,11 +60,25 @@ export function ProfileView({ userId, state, onOpenPost, onMessage }: ProfileVie
           <p className="profile-bio">{user.bio}</p>
           <p className="profile-stats">
             <span><strong>{posts.length}</strong> posts</span>
-            <span><strong>{followers.length}</strong> followers</span>
-            <span><strong>{following.length}</strong> following</span>
+            <button type="button" className="stat-btn" onClick={() => setList('followers')}>
+              <strong>{followers.length}</strong> followers
+            </button>
+            <button type="button" className="stat-btn" onClick={() => setList('following')}>
+              <strong>{following.length}</strong> following
+            </button>
           </p>
         </div>
       </header>
+
+      {list && (
+        <FollowList
+          title={list === 'followers' ? `${user.displayName}'s followers` : `${user.displayName} is following`}
+          users={list === 'followers' ? followers : following}
+          state={state}
+          onClose={() => setList(null)}
+          onOpenProfile={onOpenProfile}
+        />
+      )}
 
       <div className="profile-tabs" role="tablist" aria-label="Profile tabs">
         <button
@@ -81,7 +98,7 @@ export function ProfileView({ userId, state, onOpenPost, onMessage }: ProfileVie
             className={tab === 'saved' ? 'profile-tab profile-tab--active' : 'profile-tab'}
             onClick={() => setTab('saved')}
           >
-            🔖 Saved
+            🔖 Saved ({saved.length})
           </button>
         )}
       </div>

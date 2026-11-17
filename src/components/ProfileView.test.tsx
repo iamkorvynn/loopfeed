@@ -15,8 +15,12 @@ describe('ProfileView', () => {
     render(<ProfileView userId="u_mara" state={s} onOpenPost={() => {}} onMessage={() => {}} />)
     expect(screen.getByText('mara.makes')).toBeInTheDocument()
     expect(screen.getByText(/Ceramics, glaze tests/)).toBeInTheDocument()
-    expect(screen.getByText('2')).toBeInTheDocument() // 2 posts
-    expect(screen.getByText('Follow')).toBeInTheDocument()
+    // Mara has 2 posts, 4 followers, follows 3 people.
+    const stats = screen.getByText(/posts/).closest('p')?.textContent ?? ''
+    expect(stats).toContain('2')
+    expect(stats).toContain('4')
+    // I already follow Mara in the seed, so the button says Following.
+    expect(screen.getByText('Following')).toBeInTheDocument()
     expect(screen.getByText('Message')).toBeInTheDocument()
   })
 

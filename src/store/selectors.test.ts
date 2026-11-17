@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { buildSeedState } from '../data/seed'
 import {
+  commentsForPost,
   followersOf,
   followingOf,
   otherParticipant,
@@ -42,5 +43,13 @@ describe('unread counts', () => {
   it('otherParticipant finds the non-me side of a thread', () => {
     const thread = s.threads.find((t) => t.id === 't_mara')!
     expect(otherParticipant(s, thread)?.id).toBe('u_mara')
+  })
+})
+
+describe('commentsForPost', () => {
+  it('returns oldest first', () => {
+    const comments = commentsForPost(s, 'p_me_sketch_4')
+    expect(comments.map((c) => c.id)).toEqual(['c_1', 'c_2'])
+    expect(comments[0].createdAt).toBeLessThan(comments[1].createdAt)
   })
 })

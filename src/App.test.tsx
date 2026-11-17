@@ -44,3 +44,13 @@ describe('App shell', () => {
     expect(screen.getByText(/Loops only/)).toBeInTheDocument()
   })
 })
+
+describe('App profile navigation', () => {
+  it('clicking a post author opens their profile', () => {
+    render(<App />)
+    // The first post in the feed is Mara's; its header button opens her profile.
+    const authorBtn = document.querySelector('.post-author') as HTMLButtonElement
+    fireEvent.click(authorBtn)
+    expect(screen.getByText(/Ceramics, glaze tests/)).toBeInTheDocument()
+  })
+})

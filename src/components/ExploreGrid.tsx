@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { AppState } from '../types'
 import { explorePosts } from '../store/selectors'
 import { ArtImage } from './ArtImage'
+import { LoopBadge } from './LoopBadge'
 import { uploadedImages } from '../store/store'
 import { EmptyState } from './EmptyState'
 
@@ -62,11 +63,7 @@ export function ExploreGrid({ state, onOpenPost }: ExploreGridProps) {
                 className="explore-art"
                 imageDataUrl={uploadedImages.get(p.id)}
               />
-              {p.loop && (
-                <span className="explore-loop-badge">
-                  ⟳ {p.loop.day}/{p.loop.total}
-                </span>
-              )}
+              {p.loop && <LoopBadge loop={p.loop} />}
               <span className="explore-likes">❤️ {p.likeIds.length}</span>
             </button>
           ))}

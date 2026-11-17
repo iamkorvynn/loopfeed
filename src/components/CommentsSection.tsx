@@ -38,6 +38,7 @@ export function CommentsSection({ postId, state, defaultOpen = false }: Comments
               key={c.id}
               comment={c}
               author={state.users.find((u) => u.id === c.userId)}
+              currentUserId={state.currentUserId}
             />
           ))}
         </ul>

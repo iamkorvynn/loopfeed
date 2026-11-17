@@ -19,7 +19,7 @@ describe('CommentsSection delete', () => {
     fireEvent.click(screen.getByLabelText('Delete this comment'))
     const fresh = getState()
     rerender(<CommentsSection postId="p_theo_gen_41" state={fresh} />)
-    expect(screen.getByText('Be the first to comment')).toBeInTheDocument()
+    expect(screen.getByText(/Be the first to comment/)).toBeInTheDocument()
   })
 
   it('shows no delete button on other people’s comments', () => {

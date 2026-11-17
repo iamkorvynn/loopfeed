@@ -2,12 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { buildSeedState } from '../data/seed'
 import {
   addComment,
+  createPost,
   getState,
   resetState,
   setStateForTests,
   toggleFollow,
   toggleLike,
   toggleSave,
+  uploadedImages,
 } from './store'
 
 const NOW = Date.now()
@@ -103,5 +105,24 @@ describe('seed sanity', () => {
     s.users = []
     setStateForTests(s)
     expect(getState().users.length).toBe(0)
+  })
+})
+
+describe('createPost with upload', () => {
+  it('stores the uploaded image data URL outside localStorage state', () => {
+    const post = createPost({
+      caption: 'uploaded art',
+      artSeed: 5,
+      artStyle: 'ocean',
+      imageDataUrl: 'data:image/png;base64,abc',
+    })
+    expect(uploadedImages.get(post.id)).toBe('data:image/png;base64,abc')
+    expect(getState().posts[0].id).toBe(post.id)
+  })
+})
+
+describe('toggleSave edge cases', () => {
+  it('returns false for an unknown post', () => {
+    expect(toggleSave('p_nope')).toBe(false)
   })
 })

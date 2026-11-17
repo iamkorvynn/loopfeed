@@ -23,12 +23,12 @@ export function PostCard({ post, state, onOpenProfile }: PostCardProps) {
   const author = state.users.find((u) => u.id === post.userId)
   const me = state.currentUserId
   const [showBurst, setShowBurst] = useState(false)
+  const [copied, setCopied] = useState(false)
   const lastTap = useRef(0)
   if (!author) return null
 
   const liked = post.likeIds.includes(me)
   const saved = post.saveIds.includes(me)
-  const [copied, setCopied] = useState(false)
 
   const copyLink = async () => {
     const url = `${window.location.origin}/post/${post.id}`

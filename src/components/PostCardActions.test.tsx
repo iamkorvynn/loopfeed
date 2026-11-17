@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { buildSeedState } from '../data/seed'
 import { getState, resetState } from '../store/store'
 import { PostCard } from './PostCard'
 

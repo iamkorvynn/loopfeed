@@ -13,7 +13,7 @@ describe('App reset demo and create flow', () => {
     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true)
     render(<App />)
     // Like my own Day 4 sketch post first so the reseed is observable.
-    const likeBtn = screen.getByLabelText('Like this post', { selector: 'button' })
+    const likeBtn = screen.getAllByLabelText('Like this post')[0]
     fireEvent.click(likeBtn)
     expect(getState().posts.find((p) => p.id === 'p_me_sketch_4')?.likeIds).toContain('u_me')
     fireEvent.click(screen.getByText('Reset demo'))
@@ -25,7 +25,7 @@ describe('App reset demo and create flow', () => {
   it('reset demo does nothing when cancelled', () => {
     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false)
     render(<App />)
-    fireEvent.click(screen.getByLabelText('Like this post', { selector: 'button' }))
+    fireEvent.click(screen.getAllByLabelText('Like this post')[0])
     fireEvent.click(screen.getByText('Reset demo'))
     expect(confirm).toHaveBeenCalled()
     expect(getState().posts.find((p) => p.id === 'p_me_sketch_4')?.likeIds).toContain('u_me')

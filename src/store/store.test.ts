@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { buildSeedState } from '../../data/seed'
+import { buildSeedState } from '../data/seed'
 import {
   addComment,
   getState,
@@ -10,7 +10,7 @@ import {
   toggleSave,
 } from './store'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()
@@ -19,11 +19,11 @@ beforeEach(() => {
 
 describe('toggleLike', () => {
   it('likes a post that is not liked yet', () => {
-    const post = getState().posts.find((p) => p.id === 'p_june_stairs')!
+    const post = getState().posts.find((p) => p.id === 'p_finn_sunrise')!
     expect(post.likeIds).not.toContain('u_me')
-    const liked = toggleLike('p_june_stairs')
+    const liked = toggleLike('p_finn_sunrise')
     expect(liked).toBe(true)
-    expect(getState().posts.find((p) => p.id === 'p_june_stairs')!.likeIds).toContain('u_me')
+    expect(getState().posts.find((p) => p.id === 'p_finn_sunrise')!.likeIds).toContain('u_me')
   })
 
   it('unlikes a post that is already liked', () => {
@@ -37,11 +37,11 @@ describe('toggleLike', () => {
   })
 
   it('persists the like to localStorage', () => {
-    toggleLike('p_june_stairs')
+    toggleLike('p_finn_sunrise')
     const raw = localStorage.getItem('loopfeed-state-v1')
-    expect(raw).toContain('p_june_stairs')
+    expect(raw).toContain('p_finn_sunrise')
     const parsed = JSON.parse(raw!)
-    expect(parsed.posts.find((p: { id: string }) => p.id === 'p_june_stairs').likeIds).toContain('u_me')
+    expect(parsed.posts.find((p: { id: string }) => p.id === 'p_finn_sunrise').likeIds).toContain('u_me')
   })
 })
 
@@ -72,15 +72,15 @@ describe('toggleFollow', () => {
 
 describe('addComment', () => {
   it('adds a comment with trimmed text', () => {
-    const c = addComment('p_june_stairs', '  love this route  ')
+    const c = addComment('p_finn_sunrise', '  love this run  ')
     expect(c).not.toBeNull()
-    expect(c!.text).toBe('love this route')
+    expect(c!.text).toBe('love this run')
     expect(getState().comments.some((x) => x.id === c!.id)).toBe(true)
   })
 
   it('rejects empty and whitespace-only comments', () => {
-    expect(addComment('p_june_stairs', '   ')).toBeNull()
-    expect(addComment('p_june_stairs', '')).toBeNull()
+    expect(addComment('p_finn_sunrise', '   ')).toBeNull()
+    expect(addComment('p_finn_sunrise', '')).toBeNull()
   })
 
   it('rejects comments on unknown posts', () => {

@@ -43,3 +43,14 @@ describe('NavBar', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('light')
   })
 })
+
+describe('NavBar reset demo', () => {
+  it('Reset demo calls onResetDemo', () => {
+    const onReset = vi.fn()
+    render(
+      <NavBar view="feed" onNavigate={() => {}} unreadDms={0} unreadNotifs={0} onResetDemo={onReset} />,
+    )
+    fireEvent.click(screen.getByText('Reset demo'))
+    expect(onReset).toHaveBeenCalledTimes(1)
+  })
+})

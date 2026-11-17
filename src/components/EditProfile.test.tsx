@@ -40,3 +40,14 @@ describe('EditProfile', () => {
     expect(getState().users.find((u) => u.id === 'u_me')!.displayName).toBe('You')
   })
 })
+
+describe('EditProfile art style', () => {
+  it('changes the avatar style', () => {
+    const s = buildSeedState(Date.now())
+    render(<EditProfile state={s} onDone={() => {}} />)
+    const select = screen.getByLabelText('Avatar / art style')
+    fireEvent.change(select, { target: { value: 'neon' } })
+    fireEvent.click(screen.getByText('Save'))
+    expect(getState().users.find((u) => u.id === 'u_me')!.artStyle).toBe('neon')
+  })
+})

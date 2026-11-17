@@ -1,15 +1,23 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { buildSeedState } from '../data/seed'
-import { resetState } from '../store/store'
+import { getState, resetState } from '../store/store'
 import { PostCard } from './PostCard'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()
   resetState(NOW)
 })
+
+/** PostCard takes state as a prop; after a store action, re-render with the
+ *  fresh store state — exactly what the App shell does via useStore. */
+function renderCard(postId: string) {
+  const s = getState()
+  const post = s.posts.find((p) => p.id === postId)!
+  return render(<PostCard post={post} state={s} onOpenProfile={() => {}} />)
+}
 
 describe('PostCard', () => {
   it('renders the author, caption and like count', () => {
@@ -17,7 +25,8 @@ describe('PostCard', () => {
     const post = s.posts.find((p) => p.id === 'p_mara_clay_12')!
     render(<PostCard post={post} state={s} onOpenProfile={() => {}} />)
     expect(screen.getByText(/Day 12 of 30 days of clay/)).toBeInTheDocument()
-    expect(screen.getByLabelText('Like this post')).toBeInTheDocument()
+    // Seed already has me in this post's likeIds, so it shows as liked.
+    expect(screen.getByLabelText('Unlike this post')).toBeInTheDocument()
     expect(screen.getByText('4')).toBeInTheDocument()
   })
 
@@ -29,21 +38,25 @@ describe('PostCard', () => {
   })
 
   it('liking via the heart button toggles the label', () => {
-    const s = buildSeedState(NOW)
-    const post = s.posts.find((p) => p.id === 'p_june_stairs')!
-    render(<PostCard post={post} state={s} onOpenProfile={() => {}} />)
-    const btn = screen.getByLabelText('Like this post')
-    fireEvent.click(btn)
+    // p_finn_sunrise is not liked by me in the seed.
+    const { rerender } = renderCard('p_finn_sunrise')
+    fireEvent.click(screen.getByLabelText('Like this post'))
+    const s = getState()
+    rerender(
+      <PostCard post={s.posts.find((p) => p.id === 'p_finn_sunrise')!} state={s} onOpenProfile={() => {}} />,
+    )
     expect(screen.getByLabelText('Unlike this post')).toBeInTheDocument()
   })
 
   it('double-clicking the image likes the post', () => {
-    const s = buildSeedState(NOW)
-    const post = s.posts.find((p) => p.id === 'p_june_stairs')!
-    render(<PostCard post={post} state={s} onOpenProfile={() => {}} />)
+    const { rerender } = renderCard('p_finn_sunrise')
     const media = screen.getByLabelText('Post image, double-click to like')
     fireEvent.click(media)
     fireEvent.click(media)
+    const s = getState()
+    rerender(
+      <PostCard post={s.posts.find((p) => p.id === 'p_finn_sunrise')!} state={s} onOpenProfile={() => {}} />,
+    )
     expect(screen.getByLabelText('Unlike this post')).toBeInTheDocument()
   })
 })

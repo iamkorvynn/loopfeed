@@ -47,6 +47,23 @@ describe('FollowList via ProfileView', () => {
     expect(onOpenProfile).toHaveBeenCalledWith('u_theo')
   })
 
+  it('Escape closes the followers list', () => {
+    const s = buildSeedState(Date.now())
+    render(
+      <ProfileView
+        userId="u_mara"
+        state={s}
+        onOpenPost={() => {}}
+        onMessage={() => {}}
+        onOpenProfile={() => {}}
+      />,
+    )
+    fireEvent.click(screen.getByText(/followers/))
+    expect(screen.getByLabelText("Mara Voss's followers")).toBeInTheDocument()
+    fireEvent.keyDown(window, { key: 'Escape' })
+    expect(screen.queryByLabelText("Mara Voss's followers")).not.toBeInTheDocument()
+  })
+
   it('Message button calls onMessage with the user id', () => {
     const s = buildSeedState(Date.now())
     const onMessage = vi.fn()

@@ -4,6 +4,7 @@ import { followersOf, followingOf, postsByUser, savedPosts } from '../store/sele
 import { uploadedImages } from '../store/store'
 import { Avatar } from './Avatar'
 import { ArtImage } from './ArtImage'
+import { LoopBadge } from './LoopBadge'
 import { FollowButton } from './FollowButton'
 import { FollowList } from './FollowList'
 import { EditProfile } from './EditProfile'
@@ -125,7 +126,7 @@ export function ProfileView({ userId, state, onOpenPost, onMessage, onOpenProfil
                 className="explore-art"
                 imageDataUrl={uploadedImages.get(p.id)}
               />
-              {p.loop && <span className="explore-loop-badge">⟳ {p.loop.day}/{p.loop.total}</span>}
+              {p.loop && <LoopBadge loop={p.loop} />}
             </button>
           ))}
         </div>

@@ -39,3 +39,14 @@ describe('SearchView', () => {
     expect(screen.getByText(/No results for/)).toBeInTheDocument()
   })
 })
+
+describe('SearchView open post', () => {
+  it('clicking a post result calls onOpenPost', () => {
+    const s = buildSeedState(Date.now())
+    const opened: string[] = []
+    render(<SearchView state={s} onOpenProfile={() => {}} onOpenPost={(id) => opened.push(id)} />)
+    fireEvent.change(screen.getByLabelText('Search LoopFeed'), { target: { value: 'one-pot' } })
+    fireEvent.click(screen.getByLabelText(/Post: Day 3 of 7 one-pot dinners/))
+    expect(opened).toEqual(['p_ravi_pot_3'])
+  })
+})

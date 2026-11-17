@@ -14,7 +14,8 @@ describe('NotificationsView', () => {
     const s = buildSeedState(Date.now())
     render(<NotificationsView state={s} onOpenPost={() => {}} />)
     expect(screen.getByText('Notifications')).toBeInTheDocument()
-    expect(screen.getByText(/liked your Day 4 sketch post/)).toBeInTheDocument()
+    // Two people liked the same post, so the text appears twice.
+    expect(screen.getAllByText(/liked your Day 4 sketch post/).length).toBe(2)
     expect(screen.getByText(/started following you/)).toBeInTheDocument()
     expect(document.querySelectorAll('.notif-item--unread').length).toBe(2)
   })

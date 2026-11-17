@@ -10,24 +10,37 @@ interface ExploreGridProps {
   onOpenPost: (postId: string) => void
 }
 
-/** Explore: most-liked first, with a Loops-only filter. */
+/** Explore: most-liked or newest first, with a Loops-only filter. */
 export function ExploreGrid({ state, onOpenPost }: ExploreGridProps) {
   const [loopsOnly, setLoopsOnly] = useState(false)
+  const [sort, setSort] = useState<'liked' | 'newest'>('liked')
   const all = explorePosts(state)
-  const posts = loopsOnly ? all.filter((p) => p.loop) : all
+  const sorted = sort === 'newest'
+    ? [...all].sort((a, b) => b.createdAt - a.createdAt)
+    : all
+  const posts = loopsOnly ? sorted.filter((p) => p.loop) : sorted
 
   return (
     <div className="explore">
       <div className="explore-head">
         <h1>Explore</h1>
-        <label className="explore-filter">
-          <input
-            type="checkbox"
-            checked={loopsOnly}
-            onChange={(e) => setLoopsOnly(e.target.checked)}
-          />
-          Loops only
-        </label>
+        <div className="explore-controls">
+          <label className="explore-filter">
+            Sort
+            <select value={sort} onChange={(e) => setSort(e.target.value as 'liked' | 'newest')} aria-label="Sort explore posts">
+              <option value="liked">Most liked</option>
+              <option value="newest">Newest</option>
+            </select>
+          </label>
+          <label className="explore-filter">
+            <input
+              type="checkbox"
+              checked={loopsOnly}
+              onChange={(e) => setLoopsOnly(e.target.checked)}
+            />
+            Loops only
+          </label>
+        </div>
       </div>
       {posts.length === 0 ? (
         <EmptyState title="No Loops yet" body="No posts in a series right now — try turning the filter off." />

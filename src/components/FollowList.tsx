@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { AppState, User } from '../types'
 import { UserRow } from './UserRow'
 
@@ -12,6 +13,14 @@ interface FollowListProps {
 /** Overlay list of followers / following, with follow buttons. */
 export function FollowList({ title, users, state, onClose, onOpenProfile }: FollowListProps) {
   const me = state.users.find((u) => u.id === state.currentUserId)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
   return (
     <div className="modal-backdrop" role="dialog" aria-label={title} onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { AppState } from '../types'
 import { markAllNotificationsRead } from '../store/store'
 import { NotificationItem } from './NotificationItem'
@@ -9,8 +10,11 @@ interface NotificationsViewProps {
 }
 
 export function NotificationsView({ state, onOpenPost }: NotificationsViewProps) {
+  const [filter, setFilter] = useState<'all' | 'unread'>('all')
   const unread = state.notifications.filter((n) => !n.read).length
-  const sorted = [...state.notifications].sort((a, b) => b.createdAt - a.createdAt)
+  const sorted = [...state.notifications]
+    .filter((n) => (filter === 'unread' ? !n.read : true))
+    .sort((a, b) => b.createdAt - a.createdAt)
 
   return (
     <div className="notifications">
@@ -21,6 +25,26 @@ export function NotificationsView({ state, onOpenPost }: NotificationsViewProps)
             Mark all read ({unread})
           </button>
         )}
+      </div>
+      <div className="profile-tabs" role="tablist" aria-label="Notification filter">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={filter === 'all'}
+          className={filter === 'all' ? 'profile-tab profile-tab--active' : 'profile-tab'}
+          onClick={() => setFilter('all')}
+        >
+          All
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={filter === 'unread'}
+          className={filter === 'unread' ? 'profile-tab profile-tab--active' : 'profile-tab'}
+          onClick={() => setFilter('unread')}
+        >
+          Unread ({unread})
+        </button>
       </div>
       {sorted.length === 0 ? (
         <EmptyState title="All quiet" body="Likes, comments, follows and Loop updates will show up here." />

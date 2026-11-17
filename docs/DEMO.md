@@ -22,6 +22,8 @@ Start with `npm run dev` and open http://localhost:5173.
   live percentages appear.
 - Stories auto-advance after 6s; use ←/→ or the Prev/Next buttons; Esc closes.
 - Noor's story is gone — it expired (stories live 24h).
+- **Post your own:** back on the feed, hit **＋ Post a story**, add a poll if
+  you like — it opens in the viewer right away.
 
 ## 4. Search + profile (20s)
 

@@ -40,7 +40,7 @@ describe('MessagesView keyboard send', () => {
         onStarted={() => {}}
       />,
     )
-    expect(screen.getByText(/Say hi to Noor Haddad/)).toBeInTheDocument()
+    expect(screen.getByText(/Say hi to noor.lines/)).toBeInTheDocument()
     const input = screen.getByLabelText('Write a message')
     fireEvent.change(input, { target: { value: 'hi noor!' } })
     fireEvent.click(screen.getByText('Send'))

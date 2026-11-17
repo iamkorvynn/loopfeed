@@ -83,7 +83,7 @@ export function seedUsers(): User[] {
       artStyle: 'geo',
       artSeed: 87,
       verified: false,
-      following: ['u_me', 'u_noor', 'u_sana'],
+      following: ['u_me', 'u_noor', 'u_finn'],
     },
   ]
 }

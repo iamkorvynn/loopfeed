@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AppState } from '../types'
 import { searchAll } from '../store/selectors'
+import { clearRecentSearches, loadRecentSearches, saveRecentSearch } from '../utils/recentSearches'
 import { UserRow } from './UserRow'
 import { ArtImage } from './ArtImage'
 import { uploadedImages } from '../store/store'
@@ -14,8 +15,13 @@ interface SearchViewProps {
 /** Search people (username / name / bio) and posts (caption / Loop series). */
 export function SearchView({ state, onOpenProfile, onOpenPost }: SearchViewProps) {
   const [query, setQuery] = useState('')
+  const [recent, setRecent] = useState<string[]>(() => loadRecentSearches())
   const { users, posts } = searchAll(state, query)
   const me = state.users.find((u) => u.id === state.currentUserId)
+
+  const submitRecent = () => {
+    if (query.trim()) setRecent(saveRecentSearch(query))
+  }
 
   return (
     <div className="search-view">
@@ -27,7 +33,35 @@ export function SearchView({ state, onOpenProfile, onOpenPost }: SearchViewProps
         placeholder="Search people, captions, Loops…"
         aria-label="Search LoopFeed"
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') submitRecent()
+        }}
+        onBlur={submitRecent}
       />
+      {query.trim() === '' && recent.length > 0 && (
+        <div className="recent-searches">
+          <div className="recent-head">
+            <h2 className="search-section">Recent</h2>
+            <button
+              type="button"
+              className="btn btn--ghost btn--sm"
+              onClick={() => {
+                clearRecentSearches()
+                setRecent([])
+              }}
+            >
+              Clear
+            </button>
+          </div>
+          <div className="recent-chips">
+            {recent.map((r) => (
+              <button key={r} type="button" className="recent-chip" onClick={() => setQuery(r)}>
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {query.trim() === '' && (
         <p className="search-hint">Try “clay”, “neon”, “mara”, or a Loop series like “one-pot”.</p>
       )}

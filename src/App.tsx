@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from './store/useStore'
 import { resetDemo } from './store/store'
 import { unreadDmCount, unreadNotificationCount } from './store/selectors'
+import { applyStoredTheme } from './utils/theme'
 import { NavBar, type View } from './components/NavBar'
 import { FeedView } from './components/FeedView'
 import { ExploreGrid } from './components/ExploreGrid'
@@ -26,6 +27,22 @@ export default function App() {
   const [activeThreadId, setActiveThreadId] = useState<string | undefined>(undefined)
   const [startWithUserId, setStartWithUserId] = useState<string | undefined>(undefined)
   const [detailPostId, setDetailPostId] = useState<string | null>(null)
+
+  // Apply the stored theme once, and let "/" jump to search (unless typing).
+  useEffect(() => {
+    applyStoredTheme()
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
+      if (e.key === '/' && !typing) {
+        e.preventDefault()
+        navigate('search')
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const navigate = (next: View) => {
     setView(next)
@@ -112,6 +129,7 @@ export default function App() {
               state={state}
               onOpenPost={openPost}
               onMessage={openMessagesWith}
+              onOpenProfile={openProfile}
             />
           ) : (
             <EmptyState title="No profile selected" body="Pick a person from the feed or search." />

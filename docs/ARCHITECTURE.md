@@ -37,12 +37,13 @@ seed (src/data/*) ──> loadState() ──> module store (src/store/store.ts)
 | Generated art | `src/data/art.ts`, `src/components/ArtImage.tsx`, `src/components/Avatar.tsx` | 8 palettes, seeded PRNG compositions, inline SVG |
 | Store | `src/store/store.ts`, `persistence.ts`, `selectors.ts`, `useStore.ts` | Actions, localStorage, derived views, hook |
 | Feed | `FeedView`, `PostCard`, `LikeButton`, `SaveButton`, `CommentsSection`, `CommentItem` | Double-tap like, heart burst, Loop ring |
-| Stories | `StoryTray`, `StoryViewer`, `PollCard` | 24h expiry, progress, auto-advance, polls |
-| Discovery | `ExploreGrid`, `SearchView`, `UserRow`, `FollowButton` | Loops-only filter, people+post search |
-| Profile | `ProfileView`, `EditProfile` | Posts/Saved tabs, stats |
-| Messages | `MessagesView`, `ThreadList`, `MessageBubble` | Two-pane DM, read ticks |
+| Stories | `StoryTray`, `StoryViewer`, `PollCard`, `StoryComposer` | 24h expiry, progress, auto-advance, polls, post-your-own |
+| Discovery | `ExploreGrid`, `SearchView`, `UserRow`, `FollowButton`, `LoopBadge` | Loops-only filter + sort, people+post search, recent searches |
+| Profile | `ProfileView`, `EditProfile`, `FollowList` | Posts/Saved tabs, stats, follower lists |
+| Messages | `MessagesView`, `ThreadList`, `MessageBubble` | Two-pane DM, read ticks, story replies |
 | Notifications | `NotificationsView`, `NotificationItem` | Mark-all-read |
-| Shell | `src/App.tsx`, `NavBar`, `EmptyState` | View routing, badges, dark mode, reset demo |
+| Shell | `src/App.tsx`, `NavBar`, `EmptyState`, `PostDetail` | View routing, badges, dark mode, reset demo, `/` shortcut |
+| Utils | `src/utils/format.ts`, `ids.ts`, `theme.ts`, `recentSearches.ts` | Time/count helpers, seeded PRNG, persisted theme + recents |
 
 ## Key rules in the store
 
@@ -55,6 +56,9 @@ seed (src/data/*) ──> loadState() ──> module store (src/store/store.ts)
   display name fails `editProfile`.
 - **Uploaded images stay out of the store.** `createPost` keeps a data URL in
   the in-memory `uploadedImages` map so `localStorage` never holds megabytes.
+- **Theme and recents are separate keys.** Dark mode lives under
+  `loopfeed-theme`, recent searches under `loopfeed-recent-searches` — neither
+  is part of the demo state, so Reset demo doesn't wipe them.
 
 ## Testing
 

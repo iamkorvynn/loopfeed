@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { getState, isStoryExpired, markStoryViewed, resetState, votePoll } from './store'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()

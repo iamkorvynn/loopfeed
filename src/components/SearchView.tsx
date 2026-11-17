@@ -4,6 +4,7 @@ import { searchAll } from '../store/selectors'
 import { clearRecentSearches, loadRecentSearches, saveRecentSearch } from '../utils/recentSearches'
 import { UserRow } from './UserRow'
 import { ArtImage } from './ArtImage'
+import { LoopBadge } from './LoopBadge'
 import { uploadedImages } from '../store/store'
 
 interface SearchViewProps {
@@ -101,7 +102,7 @@ export function SearchView({ state, onOpenProfile, onOpenPost }: SearchViewProps
                   className="explore-art"
                   imageDataUrl={uploadedImages.get(p.id)}
                 />
-                {p.loop && <span className="explore-loop-badge">⟳ {p.loop.day}/{p.loop.total}</span>}
+                {p.loop && <LoopBadge loop={p.loop} />}
               </button>
             ))}
           </div>

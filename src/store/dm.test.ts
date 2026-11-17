@@ -3,7 +3,7 @@ import { getState, markThreadRead, resetState, sendMessage } from './store'
 import { sortedThreads, unreadDmCount } from './selectors'
 import { buildSeedState } from '../data/seed'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()

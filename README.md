@@ -31,10 +31,16 @@ the top bar to reseed.
   generated sample artwork style; optionally attach it to a Loop series
 - **Search** — people (username / name / bio) and posts (caption / Loop series)
 - **DMs** — 1:1 threads, send messages, unread badges, read ticks, start a new
-  chat from any profile or the thread list
-- **Notifications** — likes, comments, follows and Loop updates, mark-all-read
+  chat from any profile or the thread list, reply to a story (sends a DM)
+- **Notifications** — likes, comments, follows and Loop updates, mark-all-read,
+  All/Unread filter
 - **Dark mode** — toggle in the top bar, remembered across visits
 - **“/” shortcut** — jumps to search
+- **Stories, posted by you** — “Post a story” in the feed, with an optional
+  2-option poll; stories expire after 24h
+- **Recent searches** — last 5 queries as chips, with clear
+- **Followers / following lists** — tap the counts on any profile
+- **Copy post link** — with Copied feedback; **delete your own comments**
 
 ## Images: no photos, all generated
 
@@ -75,10 +81,12 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full map and
 
 ## Tests
 
-67+ tests across 11 files: store actions (like/unlike, follow, comment add,
-DM send, story expiry, poll voting, Loop creation), selectors, generated-art
-determinism, and component tests (PostCard double-tap like, PollCard live
-percentages, StoryTray expiry, SearchView). Run with `npm test`.
+199 tests across 46 files: store actions (like/unlike, follow, comment add and
+delete, DM send, story expiry, poll voting, Loop creation), selectors,
+generated-art determinism, seed invariants, and component tests (PostCard
+double-tap like, PollCard live percentages, StoryTray expiry, SearchView,
+story composer, App shell flows). Run with `npm test`; see
+[`docs/TESTING.md`](docs/TESTING.md) for the conventions that keep the suite green.
 
 ## Clean-room note
 

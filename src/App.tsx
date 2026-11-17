@@ -12,7 +12,7 @@ import { ProfileView } from './components/ProfileView'
 import { MessagesView } from './components/MessagesView'
 import { NotificationsView } from './components/NotificationsView'
 import { StoryViewer } from './components/StoryViewer'
-import { PostCard } from './components/PostCard'
+import { PostDetail } from './components/PostDetail'
 import { EmptyState } from './components/EmptyState'
 
 /**
@@ -72,10 +72,6 @@ export default function App() {
     }
   }
 
-  const detailPost = detailPostId
-    ? state.posts.find((p) => p.id === detailPostId)
-    : undefined
-
   return (
     <div className="app">
       <NavBar
@@ -86,13 +82,13 @@ export default function App() {
         onResetDemo={onResetDemo}
       />
       <div className="app-body">
-        {detailPost ? (
-          <div className="post-detail">
-            <button type="button" className="btn btn--ghost" onClick={() => setDetailPostId(null)}>
-              ← Back
-            </button>
-            <PostCard post={detailPost} state={state} onOpenProfile={openProfile} />
-          </div>
+        {detailPostId ? (
+          <PostDetail
+            postId={detailPostId}
+            state={state}
+            onBack={() => setDetailPostId(null)}
+            onOpenProfile={openProfile}
+          />
         ) : view === 'feed' ? (
           <FeedView
             state={state}

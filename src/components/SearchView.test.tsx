@@ -4,7 +4,7 @@ import { buildSeedState } from '../data/seed'
 import { resetState } from '../store/store'
 import { SearchView } from './SearchView'
 
-const NOW = Date.UTC(2026, 10, 18, 2, 0, 0)
+const NOW = Date.now()
 
 beforeEach(() => {
   localStorage.clear()

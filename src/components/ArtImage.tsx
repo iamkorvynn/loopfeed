@@ -40,7 +40,6 @@ export function ArtImage({ artStyle, artSeed, label, className, imageDataUrl }: 
       <rect width="100" height="100" fill={`url(#${gid})`} />
       {shapes.map((s, i) => {
         const common = {
-          key: i,
           fill: s.kind === 'ring' ? 'none' : s.color,
           stroke: s.kind === 'ring' ? s.color : 'none',
           strokeWidth: s.kind === 'ring' ? 2.5 : 0,
@@ -48,21 +47,22 @@ export function ArtImage({ artStyle, artSeed, label, className, imageDataUrl }: 
           transform: `rotate(${s.rotate} ${s.x} ${s.y})`,
         }
         if (s.kind === 'circle' || s.kind === 'ring') {
-          return <circle {...common} cx={s.x} cy={s.y} r={s.size / 2} />
+          return <circle key={i} {...common} cx={s.x} cy={s.y} r={s.size / 2} />
         }
         if (s.kind === 'triangle') {
           const h = s.size * 0.866
           return (
             <polygon
+              key={i}
               {...common}
               points={`${s.x},${s.y - h / 2} ${s.x - s.size / 2},${s.y + h / 2} ${s.x + s.size / 2},${s.y + h / 2}`}
             />
           )
         }
         if (s.kind === 'bar') {
-          return <rect {...common} x={s.x - s.size / 2} y={s.y - 3} width={s.size} height={6} rx={3} />
+          return <rect key={i} {...common} x={s.x - s.size / 2} y={s.y - 3} width={s.size} height={6} rx={3} />
         }
-        return <rect {...common} x={s.x - s.size / 2} y={s.y - s.size / 2} width={s.size} height={s.size} rx={3} />
+        return <rect key={i} {...common} x={s.x - s.size / 2} y={s.y - s.size / 2} width={s.size} height={s.size} rx={3} />
       })}
     </svg>
   )

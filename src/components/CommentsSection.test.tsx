@@ -13,13 +13,13 @@ describe('CommentsSection', () => {
   it('shows the comment count toggle', () => {
     const s = buildSeedState(Date.now())
     render(<CommentsSection postId="p_me_sketch_4" state={s} />)
-    expect(screen.getByText('View all 2 comments')).toBeInTheDocument()
+    expect(screen.getByText(/View all 2 comments/)).toBeInTheDocument()
   })
 
   it('expands to show comments and adds a new one', () => {
     const s = buildSeedState(Date.now())
     const { rerender } = render(<CommentsSection postId="p_me_sketch_4" state={s} />)
-    fireEvent.click(screen.getByText('View all 2 comments'))
+    fireEvent.click(screen.getByText(/View all 2 comments/))
     expect(screen.getByText(/hands ARE hard/)).toBeInTheDocument()
     fireEvent.change(screen.getByLabelText('Add a comment'), { target: { value: 'day 5 will be better' } })
     fireEvent.click(screen.getByText('Post'))

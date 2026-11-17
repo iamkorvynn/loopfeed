@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import type { AppState } from '../types'
 import { feedPosts, suggestedUsers } from '../store/selectors'
 import { StoryTray } from './StoryTray'
+import { StoryComposer } from './StoryComposer'
 import { PostCard } from './PostCard'
 import { UserRow } from './UserRow'
 import { EmptyState } from './EmptyState'
@@ -13,6 +15,7 @@ interface FeedViewProps {
 }
 
 export function FeedView({ state, onOpenProfile, onOpenStory, onGoExplore }: FeedViewProps) {
+  const [composingStory, setComposingStory] = useState(false)
   const posts = feedPosts(state)
   const suggestions = suggestedUsers(state)
   const me = state.users.find((u) => u.id === state.currentUserId)
@@ -20,7 +23,22 @@ export function FeedView({ state, onOpenProfile, onOpenStory, onGoExplore }: Fee
   return (
     <div className="feed-layout">
       <main className="feed-main">
-        <StoryTray state={state} onOpenStory={onOpenStory} />
+        {composingStory ? (
+          <StoryComposer
+            onPosted={(userId) => {
+              setComposingStory(false)
+              onOpenStory(userId)
+            }}
+            onCancel={() => setComposingStory(false)}
+          />
+        ) : (
+          <>
+            <button type="button" className="btn btn--ghost" onClick={() => setComposingStory(true)}>
+              ＋ Post a story
+            </button>
+            <StoryTray state={state} onOpenStory={onOpenStory} />
+          </>
+        )}
         {posts.length === 0 ? (
           <EmptyState
             title="Your feed is empty"
@@ -29,9 +47,12 @@ export function FeedView({ state, onOpenProfile, onOpenStory, onGoExplore }: Fee
             onAction={onGoExplore}
           />
         ) : (
-          posts.map((p) => (
-            <PostCard key={p.id} post={p} state={state} onOpenProfile={onOpenProfile} />
-          ))
+          <>
+            {posts.map((p) => (
+              <PostCard key={p.id} post={p} state={state} onOpenProfile={onOpenProfile} />
+            ))}
+            <p className="feed-end">✓ You&rsquo;re all caught up — that&rsquo;s every post from people you follow.</p>
+          </>
         )}
       </main>
       <aside className="feed-side">

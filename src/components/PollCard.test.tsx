@@ -35,3 +35,12 @@ describe('PollCard', () => {
     expect(screen.getByText(/Thanks for voting/)).toBeInTheDocument()
   })
 })
+
+describe('PollCard voted state', () => {
+  it('marks the voted option as pressed', () => {
+    const voted: Poll = { ...poll, voterIds: { u_me: 1 }, votes: [14, 10] }
+    render(<PollCard poll={voted} storyId="s1" currentUserId="u_me" onVote={() => {}} />)
+    expect(screen.getByText('Mono grid').closest('button')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText('Neon grid').closest('button')).toHaveAttribute('aria-pressed', 'false')
+  })
+})

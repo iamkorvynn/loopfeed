@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { AppState } from '../types'
-import { markStoryViewed, votePoll } from '../store/store'
+import { markStoryViewed, sendMessage, votePoll } from '../store/store'
 import { storiesByUser } from '../store/selectors'
 import { ArtImage } from './ArtImage'
 import { Avatar } from './Avatar'
@@ -20,6 +20,8 @@ const AUTO_ADVANCE_MS = 6000
 export function StoryViewer({ userId, state, onClose, onOpenProfile }: StoryViewerProps) {
   const stories = storiesByUser(state, userId)
   const [index, setIndex] = useState(0)
+  const [reply, setReply] = useState('')
+  const [replied, setReplied] = useState(false)
   const user = state.users.find((u) => u.id === userId)
   const story = stories[index]
 
@@ -82,6 +84,29 @@ export function StoryViewer({ userId, state, onClose, onOpenProfile }: StoryView
           onVote={(id, option) => votePoll(id, option)}
         />
       )}
+      <form
+        className="story-reply"
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (!reply.trim()) return
+          sendMessage(user.id, `Re: your story — ${reply.trim()}`)
+          setReply('')
+          setReplied(true)
+          window.setTimeout(() => setReplied(false), 2000)
+        }}
+      >
+        <input
+          type="text"
+          value={reply}
+          maxLength={500}
+          placeholder={`Reply to ${user.username}…`}
+          aria-label="Reply to this story"
+          onChange={(e) => setReply(e.target.value)}
+        />
+        <button type="submit" className="btn btn--primary btn--sm" disabled={!reply.trim()}>
+          {replied ? 'Sent ✓' : 'Send'}
+        </button>
+      </form>
       <div className="story-nav">
         <button type="button" disabled={index === 0} onClick={() => setIndex(index - 1)} aria-label="Previous story">‹ Prev</button>
         <button

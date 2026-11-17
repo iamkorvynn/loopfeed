@@ -53,7 +53,10 @@ export function MessagesView({
   }, [activeThreadId, state.threads])
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    // jsdom (tests) has no scrollIntoView; guard so the component works there too.
+    if (typeof bottomRef.current?.scrollIntoView === 'function') {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [activeThread?.messages.length])
 
   const send = () => {

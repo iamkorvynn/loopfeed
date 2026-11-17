@@ -276,3 +276,47 @@ export function resetDemo(): AppState {
   clearPersistedState()
   return resetState()
 }
+
+/** Delete a comment. Only the comment's author (or the post owner) may delete. */
+export function deleteComment(commentId: string, userId?: string): boolean {
+  const next = clone(state)
+  const me = userId ?? next.currentUserId
+  const idx = next.comments.findIndex((c) => c.id === commentId)
+  if (idx < 0) return false
+  const comment = next.comments[idx]
+  const post = next.posts.find((p) => p.id === comment.postId)
+  if (comment.userId !== me && post?.userId !== me) return false
+  next.comments.splice(idx, 1)
+  commit(next)
+  return true
+}
+
+/** Post a new story (24h expiry). Optionally attach a 2-option poll. */
+export function addStory(input: {
+  caption: string
+  artSeed: number
+  artStyle: ArtStyle
+  poll?: { question: string; options: [string, string] }
+}): Story {
+  const next = clone(state)
+  const story: Story = {
+    id: newId('s'),
+    userId: next.currentUserId,
+    caption: input.caption.trim().slice(0, 200),
+    artSeed: input.artSeed,
+    artStyle: input.artStyle,
+    createdAt: Date.now(),
+    poll: input.poll
+      ? {
+          question: input.poll.question.trim().slice(0, 140),
+          options: input.poll.options,
+          votes: [0, 0],
+          voterIds: {},
+        }
+      : undefined,
+    viewedBy: [],
+  }
+  next.stories.unshift(story)
+  commit(next)
+  return story
+}
